@@ -745,7 +745,7 @@ if __name__ == '__main__':
           summary_writer=None,
           step=0)
 
-    splits = {"test": FLAGS.test_file}
+    splits = {"predict": FLAGS.test_file}
     registerTask(FLAGS.task, splits=splits)
 
     if FLAGS.shard_id is not None:
