@@ -14,7 +14,7 @@ DEFAULT_OUTPUT_FEATURES = {
         vocabulary=t5.data.get_default_vocabulary(), add_eos=True)
 }
 
-def registerTask(task: str, splits: Dict, metric_name: str):
+def registerTask(task: str, splits: Dict, metric_name: str="PRF1"):
   def parseDataset(split: str, shuffle_files: bool = False, seed: int = 0):
     ds = tf.data.TextLineDataset([splits[split]])
     ds = ds.map(
