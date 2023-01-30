@@ -34,7 +34,7 @@ def registerTask(task: str, splits: Dict, metric_name: str="PRF1", extension: st
         }
       else:
         return {
-          "inputs":ex["input"]
+          "inputs":ex
         }
     return ds.map(to_inputs_and_targets, 
                   num_parallel_calls=tf.data.experimental.AUTOTUNE)
