@@ -47,7 +47,7 @@ from t5x import utils
 import tensorflow as tf
 from tensorflow.io import gfile
 from typing_extensions import Protocol
-from src.task import seqio, registerTask
+from task import seqio, registerTask
 
 import nest_asyncio
 nest_asyncio.apply()
