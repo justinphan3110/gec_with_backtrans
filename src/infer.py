@@ -746,7 +746,7 @@ if __name__ == '__main__':
           step=0)
 
     splits = {"predict": FLAGS.test_file}
-    registerTask(FLAGS.task, splits=splits, extension="txt")
+    registerTask(FLAGS.task, splits=splits)
 
     if FLAGS.shard_id is not None:
       # We fall back to this flag since XM does not support sweeps over flags

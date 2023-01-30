@@ -4,6 +4,7 @@ import tensorflow as tf
 import functools
 from typing import Dict
 import metrics
+import os
 
 TaskRegistry = seqio.TaskRegistry
 DEFAULT_OUTPUT_FEATURES = {
@@ -14,27 +15,22 @@ DEFAULT_OUTPUT_FEATURES = {
         vocabulary=t5.data.get_default_vocabulary(), add_eos=True)
 }
 
-def registerTask(task: str, splits: Dict, metric_name: str="PRF1", extension: str="tsv"):
+def registerTask(task: str, splits: Dict, metric_name: str=None):
+
+  extension = ".tsv"
   def parseDataset(split: str, shuffle_files: bool = False, seed: int = 0):
     ds = tf.data.TextLineDataset([splits[split]])
-
-    if extension == "tsv":
-      ds = ds.map(
-      functools.partial(tf.io.decode_csv, record_defaults=["", ""],
-                        field_delim="\t", use_quote_delim=False),
-      num_parallel_calls=tf.data.experimental.AUTOTUNE)
-      ds = ds.map(lambda *ex: dict(zip(["input", "target"], ex)))
+    ds = ds.map(
+    functools.partial(tf.io.decode_csv, record_defaults=["", ""],
+                      field_delim="\t", use_quote_delim=False),
+    num_parallel_calls=tf.data.experimental.AUTOTUNE)
+    ds = ds.map(lambda *ex: dict(zip(["input", "target"], ex)))
     return ds
   def preprocessor(ds):
     def to_inputs_and_targets(ex):
-      if extension == "tsv":
         return {
             "inputs":ex["input"],
             "targets": ex["target"]
-        }
-      else:
-        return {
-          "inputs":ex
         }
     return ds.map(to_inputs_and_targets, 
                   num_parallel_calls=tf.data.experimental.AUTOTUNE)
@@ -52,5 +48,5 @@ def registerTask(task: str, splits: Dict, metric_name: str="PRF1", extension: st
           seqio.preprocessors.append_eos_after_trim,
       ],
       output_features=DEFAULT_OUTPUT_FEATURES,
-      metric_fns=[metrics.map_name_to_metric_function(metric_name)]
+      metric_fns=[metrics.map_name_to_metric_function(metric_name)] if metric_name else []
   )
