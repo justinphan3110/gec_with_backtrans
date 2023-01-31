@@ -194,6 +194,7 @@ def _source_backtranslation_format(source, backtrans):
 def _yield_clang8_backtranslation_seqs(backtranslation_file):
     with open(backtranslation_file, 'r') as file:
         for line in file:
+            line = line.replace("en: ", "").strip()
             # yield tuple[1] so that it can hover an empty string to reuse the _tokenize function
             yield line, ''
 
@@ -222,15 +223,18 @@ def _prepare_clang8_with_backtranslation(language: str, clang8_targets_dir: str,
   if tokenize_text:
     tokenization_label = '.spacy_tokenized'
     source_target_pairs = _tokenize(source_target_pairs, nlp)
-
+        
     print('Tokenizing Backtranslation sequences...')
-    backtrans_seqs, _ = _tokenize(backtrans_seqs, nlp)
+    backtrans_seqs = _tokenize(backtrans_seqs, nlp)
 
   output_path = os.path.join(
-      output_dir, f'clang8_source__backtranslation_target_{language}{tokenization_label}.tsv')
-
+      output_dir, f'clang8_source_backtranslation_target_{language}{tokenization_label}.tsv')
+    
+  
+  source_target_pairs = list(source_target_pairs)
+  backtrans_seqs = list(backtrans_seqs)
   assert len(source_target_pairs) == len(backtrans_seqs)
-  source_target_pairs = [(_source_backtranslation_format(s[0], backtrans), s[1]) for s,backtrans in zip(source_target_pairs, backtrans_seqs)]
+  source_target_pairs = [(_source_backtranslation_format(s[0], backtrans[0]), s[1]) for s,backtrans in zip(list(source_target_pairs), list(backtrans_seqs))]
   _write_source_target_pairs_to_tsv(source_target_pairs, output_path)
 
 def main(argv: Sequence[str]) -> None:
