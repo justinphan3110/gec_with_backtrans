@@ -8,7 +8,7 @@ set -x
 readonly LANG8_DIR='lang-8-20111007-2.0'
 
 # Separate by comma for list of languages and backtrans files
-export LANGUAGES = 'en'
+export LANGUAGES='en'
 export BACKTRANSLATION_FILES='clang/clang8_inputs_mtet_backtranslate.txt'
 
 
