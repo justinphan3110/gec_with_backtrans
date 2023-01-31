@@ -191,6 +191,12 @@ def _prepare_clang8(language: str, clang8_targets_dir: str, lang8_dir: str,
 def _source_backtranslation_format(source, backtrans):
     return f'source: {source} hint: {backtrans}'
 
+def _yield_clang8_backtranslation_seqs(backtranslation_file):
+    with open(backtranslation_file, 'r') as file:
+        for line in file:
+            # yield tuple[1] so that it can hover an empty string to reuse the _tokenize function
+            yield line, ''
+
 def _prepare_clang8_with_backtranslation(language: str, clang8_targets_dir: str, lang8_dir: str,
                     output_dir: str, tokenize_text: str, backtranslation_file: str) -> None:
   """Prepares the cLang-8 dataset for a single language."""
@@ -210,10 +216,7 @@ def _prepare_clang8_with_backtranslation(language: str, clang8_targets_dir: str,
                                      f'clang8_{language}.detokenized.tsv')
   source_target_pairs = _yield_clang8_source_target_pairs(clang8_targets_path,
                                                           lang8_dir)
-  backtrans_seqs = []
-  with open(backtranslation_file, 'r') as file:
-    for line in file:
-        backtrans_seqs.append(line)
+  backtrans_seqs = _yield_clang8_backtranslation_seqs(backtranslation_file)
 
   tokenization_label = ''
   if tokenize_text:
@@ -221,7 +224,7 @@ def _prepare_clang8_with_backtranslation(language: str, clang8_targets_dir: str,
     source_target_pairs = _tokenize(source_target_pairs, nlp)
 
     print('Tokenizing Backtranslation sequences...')
-    backtrans_seqs, d_ = _tokenize([(s, '') for s in backtrans_seqs], nlp)
+    backtrans_seqs, _ = _tokenize(backtrans_seqs, nlp)
 
   output_path = os.path.join(
       output_dir, f'clang8_source__backtranslation_target_{language}{tokenization_label}.tsv')
