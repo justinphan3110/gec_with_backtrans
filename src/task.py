@@ -16,8 +16,6 @@ DEFAULT_OUTPUT_FEATURES = {
 }
 
 def registerTask(task: str, splits: Dict, metric_name: str=None):
-
-  extension = ".tsv"
   def parseDataset(split: str, shuffle_files: bool = False, seed: int = 0):
     ds = tf.data.TextLineDataset([splits[split]])
     ds = ds.map(
