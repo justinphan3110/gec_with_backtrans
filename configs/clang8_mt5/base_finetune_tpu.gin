@@ -56,10 +56,6 @@ utils.SaveCheckpointConfig:
 # `num_decodes` is equivalent to a beam size in a beam search decoding.
 models.EncoderDecoderModel.predict_batch_with_aux.num_decodes = 4
 
-partitioning.PjitPartitioner:
-  model_parallel_submesh = (1, 1)
-  logical_axis_rules= @partitioning.standard_logical_axis_rules()
-
 utils.RestoreCheckpointConfig:
   path = %INITIAL_CHECKPOINT_PATH
   mode = 'specific'
