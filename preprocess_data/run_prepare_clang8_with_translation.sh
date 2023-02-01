@@ -6,8 +6,8 @@
 readonly LANG8_DIR='../../lang-8-20111007-2.0'
 
 # Separate by comma for list of languages and backtrans files
-export LANGUAGES='en'
-export BACKTRANSLATION_FILES='../../clang/clang8_inputs_mtet_backtranslate.txt'
+export LANGUAGE_PAIRS='envi'
+export TRANSLATION_FILES='../../clang/clang8_inputs_mtet_translate.txt'
 
 
 # pip install absl-py spacy
@@ -25,14 +25,14 @@ mv clang8/targets .
 rm -r clang8
 
 
-echo "Generating the cLang-8 dataset for languages: ${LANGUAGES}"
-echo "Backtranslation files: ${BACKTRANSLATION_FILES}"
+echo "Generating the cLang-8 dataset for language pairs: ${LANGUAGE_PAIRS}"
+echo "Translation files: ${TRANSLATION_FILES}"
 
-python3 prepare_clang8_with_backtranslation_dataset.py \
+python3 prepare_clang8_with_translation_dataset.py \
   --lang8_dir="${LANG8_DIR}" \
   --tokenize_text='True' \
-  --languages="${LANGUAGES}" \
-  --backtranslation_files="${BACKTRANSLATION_FILES}"
+  --language_pairs="${LANGUAGE_PAIRS}" \
+  --translation_files="${TRANSLATION_FILES}"
 
 
 echo "Cleaning up"
