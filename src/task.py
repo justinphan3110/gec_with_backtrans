@@ -20,10 +20,10 @@ DEFAULT_MT5_SPM_PATH = "gs://t5-data/vocabs/mc4.250000.100extra/sentencepiece.mo
 DEFAULT_EXTRA_IDS = 100
 MT5_OUTPUT_FEATURES = {
     "inputs": seqio.Feature(
-        vocabulary=seqio.SentencePieceVocabulary(DEFAULT_MT5_SPM_PATH, DEFAULT_EXTRA_IDS), add_eos=True,
+        vocabulary=seqio.SentencePieceVocabulary(DEFAULT_MT5_SPM_PATH), add_eos=True,
         required=False),
     "targets": seqio.Feature(
-        vocabulary=seqio.SentencePieceVocabulary(DEFAULT_MT5_SPM_PATH, DEFAULT_EXTRA_IDS), add_eos=True)
+        vocabulary=seqio.SentencePieceVocabulary(DEFAULT_MT5_SPM_PATH), add_eos=True)
 }
 
 
