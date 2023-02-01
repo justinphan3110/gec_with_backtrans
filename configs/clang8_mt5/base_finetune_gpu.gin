@@ -7,7 +7,7 @@ from t5x import models
 from t5x import partitioning
 from t5x import utils
 
-include "configs/t5/t5_1_1/base.gin"
+include "configs/mt5/base.gin"
 include "configs/runs/pretrain.gin"
 
 DROPOUT_RATE = 0.1

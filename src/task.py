@@ -15,7 +15,24 @@ DEFAULT_OUTPUT_FEATURES = {
         vocabulary=t5.data.get_default_vocabulary(), add_eos=True)
 }
 
-def registerTask(task: str, splits: Dict, metric_name: str=None):
+
+DEFAULT_MT5_SPM_PATH = "gs://t5-data/vocabs/mc4.250000.100extra/sentencepiece.model"  # GCS
+DEFAULT_EXTRA_IDS = 100
+MT5_OUTPUT_FEATURES = {
+    "inputs": seqio.Feature(
+        vocabulary=seqio.SentencePieceVocabulary(DEFAULT_MT5_SPM_PATH, DEFAULT_EXTRA_IDS), add_eos=True,
+        required=False),
+    "targets": seqio.Feature(
+        vocabulary=seqio.SentencePieceVocabulary(DEFAULT_MT5_SPM_PATH, DEFAULT_EXTRA_IDS), add_eos=True)
+}
+
+
+def registerTask(task: str, splits: Dict, metric_name: str=None, vocab: str='default'):
+  vocab_map = {
+    'default': DEFAULT_OUTPUT_FEATURES,
+    'mt5': MT5_OUTPUT_FEATURES
+  }
+
   def parseDataset(split: str, shuffle_files: bool = False, seed: int = 0):
     ds = tf.data.TextLineDataset([splits[split]])
     ds = ds.map(
@@ -45,6 +62,6 @@ def registerTask(task: str, splits: Dict, metric_name: str=None):
           seqio.CacheDatasetPlaceholder(),
           seqio.preprocessors.append_eos_after_trim,
       ],
-      output_features=DEFAULT_OUTPUT_FEATURES,
+      output_features=vocab_map[vocab],
       metric_fns=[metrics.map_name_to_metric_function(metric_name)] if metric_name else []
   )

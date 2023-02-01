@@ -765,7 +765,7 @@ if __name__ == '__main__':
       'process_count', None, help='Number of processes for multi-host GPU.')
 
   flags.DEFINE_integer('process_index', None, help='Index of this process.')
-
+  flags.DEFINE_string('vocab', 'default', required=False, help="Vocab for Public T5 Model: default or mt5")
   flags.DEFINE_string("task",None, required=True, help="seqio.task for training")
   flags.DEFINE_string("metric", "PRF1", required=False, help="Define Metric Function")
   flags.DEFINE_string("train_file",None, required=True, help="The Train File for training task")
@@ -794,7 +794,7 @@ if __name__ == '__main__':
     splits = {"train": FLAGS.train_file}
     if FLAGS.predict_file:
       splits["predict"] = FLAGS.predict_file
-    registerTask(FLAGS.task, splits=splits, metric_name=FLAGS.metric)
+    registerTask(FLAGS.task, splits=splits, metric_name=FLAGS.metric, vocab=FLAGS.vocab)
 
     if FLAGS.tfds_data_dir:
       seqio.set_tfds_data_dir_override(FLAGS.tfds_data_dir)
